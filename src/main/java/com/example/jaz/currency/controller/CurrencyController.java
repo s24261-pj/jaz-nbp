@@ -1,6 +1,7 @@
 package com.example.jaz.currency.controller;
 
 import com.example.jaz.currency.model.CurrencyTable;
+import com.example.jaz.currency.model.RateInfo;
 import com.example.jaz.currency.service.CurrencyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,8 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.OptionalDouble;
 
 @RestController
 @RequestMapping("/")
@@ -23,11 +22,11 @@ public class CurrencyController {
     }
 
     @GetMapping("/{currency}")
-    @Operation(summary = "Get currency rate by number of days")
+    @Operation(summary = "Get currency rate between two dates")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Found the currency",
+                    description = "Get the currency rate",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CurrencyTable.class))}
             ),
             @ApiResponse(
@@ -56,11 +55,11 @@ public class CurrencyController {
                     content = @Content
             )
     })
-    public ResponseEntity<OptionalDouble> getCurrencyTable(
+    public ResponseEntity<RateInfo> getRateInfo(
             @PathVariable(value="currency") String currency,
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate
+            @RequestParam String startDate,
+            @RequestParam String endDate
     ) {
-        return ResponseEntity.ok(currencyService.getCurrencyRatesAverage(currency, startDate, endDate));
+        return ResponseEntity.ok(currencyService.getRateInfo(currency, startDate, endDate));
     }
 }
